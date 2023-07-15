@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define N 20 //Nome
 #define C 20 //Cognome
@@ -7,6 +8,14 @@
 #define CITTA 20 //Citta
 #define E 20 //e-mail
 #define H 100 //max numero elementi rubrica
+
+#define ORDINA_NOME 1 //ordina per nome
+#define ORDINA_COGNOME 2
+#define ORDINA_INDIRIZZO 3
+#define ORDINA_CAP 4
+#define ORDINA_CITTA 5
+#define ORDINA_NUMERO 6
+#define ORDINA_EMAIL 7
 
 //nome cognome indirizzo CAP citta numero di telefono e-mail
 typedef struct{
@@ -27,7 +36,8 @@ struct elemento_t{
     struct rubrica_t *contatto;
 };
 
-struct elemento_t hash[100];
+struct elemento_t hash[H];
+struct elemento_t hash_nome[H];
  
 rubrica_t *rubrica=NULL;
 
@@ -67,6 +77,29 @@ void visualizza(){
             printf("%d %s %s %s %d %s %d %s\n",attuale->Indice,attuale->Nome,attuale->Cognome,attuale->Indirizzo,attuale->CAP,attuale->Citta,attuale->Numero,attuale->email);
         }
     }
+    printf("\n");
+}
+
+void visualizza_hash(int campo_da_ordinare){
+    int i = 1;
+    rubrica_t *attuale;
+    
+    printf("Lista Rubrica:\n");
+
+    switch (campo_da_ordinare)
+    {
+    case ORDINA_NOME:
+        while(hash_nome[i].contatto!=NULL){
+            attuale= hash_nome[i].contatto;
+            printf("%d %s %s %s %d %s %d %s\n",attuale->Indice,attuale->Nome,attuale->Cognome,attuale->Indirizzo,attuale->CAP,attuale->Citta,attuale->Numero,attuale->email);
+            i++;
+        }
+        break;
+    
+    default:
+        break;
+    }
+
     printf("\n");
 }
 
@@ -183,6 +216,54 @@ int indice;
         printf("Elemento non trovato.\n");
     }
 }
+
+void ordina_elementi(int campo_da_ordinare){
+    rubrica_t *attuale;
+    rubrica_t *minore;
+    rubrica_t *successivo;
+    rubrica_t *tmp;
+    int i=1;
+    int j;
+    int posizione_minore;
+
+    switch (campo_da_ordinare)
+    {
+    case ORDINA_NOME:
+        memcpy(&hash_nome, &hash, sizeof(hash));
+
+        while(hash_nome[i].contatto!=NULL){
+
+            posizione_minore=i;
+            j=i+1;
+
+            attuale=hash_nome[i].contatto;
+            successivo=hash_nome[j].contatto;
+
+            while(successivo!=NULL){
+                
+                minore=hash_nome[posizione_minore].contatto;
+
+                if(strcmp(successivo->Nome,minore->Nome)<0){
+                    posizione_minore=j;
+                }
+
+                j++;
+                successivo=hash_nome[j].contatto;
+            }
+
+            tmp=attuale;
+            hash_nome[i]=hash_nome[posizione_minore];
+            hash_nome[posizione_minore].contatto=tmp;
+            i++;
+        }
+        visualizza_hash(ORDINA_NOME);
+        break;
+    
+    default:
+        break;
+    }
+}
+
 int main(){
     FILE *pfile;
     pfile=fopen("Lista_concorrenti.txt","r");
@@ -197,22 +278,21 @@ int main(){
         printf("=======================================================\n");
         printf("Scegli un' opzione:\n");
         printf("=======================================================\n");
-        printf("1  - Visualizza la rublica\n");
+        printf("1  - Visualizza la rubrica\n");
         printf("2  - Inserire nuovo nome in rubrica\n");
         printf("3  - Salva un elemento della rubrica\n");
         printf("4  - Leggi la rubrica dal file\n");
         printf("5  - Modificare un elemento della rubrica\n"); 
         printf("6  - Ricercare un elemento della rubrica\n");
         printf("7  - Visualizzare un elemento della rubrica\n");
-        printf("8  - Visualizzarla tutti gli elementi\n");
-        printf("9  - Ordinare gli elementi della lista per nome\n");
-        printf("10  - Ordinare gli elementi della lista per cognome\n"); 
-        printf("11 - Ordinare gli elementi della lista per indirizzo\n");
-        printf("12 - Ordinare gli elementi della lista per CAP\n");
-        printf("13 - Ordinare gli elementi della lista per Citta\n");
-        printf("14 - Ordinare gli elementi della lista per Numero\n");
-        printf("15 - Ordinare gli elementi della lista per e-mail\n");
-        printf("16 - exit\n");
+        printf("8  - Ordinare gli elementi della lista per nome\n");
+        printf("9  - Ordinare gli elementi della lista per cognome\n"); 
+        printf("10 - Ordinare gli elementi della lista per indirizzo\n");
+        printf("11 - Ordinare gli elementi della lista per CAP\n");
+        printf("12 - Ordinare gli elementi della lista per Citta\n");
+        printf("13 - Ordinare gli elementi della lista per Numero\n");
+        printf("14 - Ordinare gli elementi della lista per e-mail\n");
+        printf("15 - exit\n");
         printf("=======================================================\n");
         scanf(" %d",&scelta);
         switch(scelta) {
@@ -245,7 +325,7 @@ int main(){
                 break;
             }
             case 8:{
-
+                ordina_elementi(ORDINA_NOME);
                 break;
             }
             case 9:{
