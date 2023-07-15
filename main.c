@@ -329,27 +329,27 @@ int main(){
                 break;
             }
             case 9:{
-
+                ordina_elementi(ORDINA_COGNOME);
                 break;
             }
             case 10:{
-
+                ordina_elementi(ORDINA_INDIRIZZO);
                 break;
             }
             case 11:{
-
+                ordina_elementi(ORDINA_CAP);
                 break;
             }
             case 12:{
-
+                ordina_elementi(ORDINA_CITTA);
                 break;
             }
             case 13:{
-
+                ordina_elementi(ORDINA_NUMERO);
                 break;
             }
             case 14:{
-
+                ordina_elementi(ORDINA_EMAIL);
                 break;
             }
             case 15:{
